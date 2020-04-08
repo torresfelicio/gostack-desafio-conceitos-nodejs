@@ -31,23 +31,31 @@ app.post("/repositories", (request, response) => {
 
 app.put("/repositories/:id", (request, response) => {
   const { id } = request.params;
-  const { title, url, techs } = request.body;
-
+  const { title, url, techs,likes } = request.body;
   const repositoryIndex = repositories.findIndex(repository => repository.id === id);
   if (repositoryIndex < 0) {
     return response.status(400).json({error: 'Repository not found'});
   }
-  
   const repository = {
+    id,
     url,
     title,
     techs, 
     likes: 0
   };
-
   repositories[repositoryIndex] = repository;
   return response.json(repository);
   //console.log(repository)
+});
+
+app.delete("/repositories/:id", (req, res) => {
+  const { id } = req.params;
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+  if (repositoryIndex < 0){
+    return res.status(400).send();
+  };
+  repositories.splice(repositoryIndex, 1);
+  return res.status(204).send();
 });
 
 app.delete("/repositories/:id", (req, res) => {
